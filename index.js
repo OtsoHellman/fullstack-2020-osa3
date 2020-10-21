@@ -4,7 +4,9 @@ import morgan from 'morgan'
 const app = express()
 
 app.use(express.json())
-app.use(morgan('dev'))
+
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :response-time ms - :body'))
 
 let persons = [
   {
@@ -77,7 +79,7 @@ app.post('/api/persons', (req, res) => {
   const personObject = {
     name: body.name,
     number: body.number,
-    id: Math.ceil(Math.random()*314159265358)
+    id: Math.ceil(Math.random() * 314159265358)
   }
 
   persons = persons.concat(personObject)
