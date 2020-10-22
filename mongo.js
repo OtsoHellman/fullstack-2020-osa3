@@ -1,7 +1,4 @@
-import DBPassword from './config.js'
 import mongoose from 'mongoose'
-
-
 
 if (process.argv.length < 3) {
     console.log("no password given")
@@ -10,7 +7,6 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-//const url = `mongodb+srv://fullstack:${DBPassword}@cluster0.8gjok.mongodb.net/puhelinluettelo-app?retryWrites=true&w=majority`
 const url = `mongodb+srv://fullstack:${password}@cluster0.8gjok.mongodb.net/puhelinluettelo-app?retryWrites=true&w=majority`
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-const DBPassword = process.env.DBPASSWORD
+const DBURI = process.env.DBURI
 
-export default DBPassword
+export default DBURI

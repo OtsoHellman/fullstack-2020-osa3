@@ -1,6 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import Person from './models/person.js'
 
 const app = express()
 
@@ -11,28 +12,10 @@ app.use(express.static('build'))
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms - :body'))
 
-let persons = [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
-  },
-  {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
-  },
-  {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
-  }
-]
+let persons = []
+
+Person.find({}).then(res => persons = res)
+
 
 app.get('/info', (req, res) => {
   res.send(
@@ -46,14 +29,14 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
   const personObject = persons.find(person => person.id === id)
 
   personObject ? res.json(personObject) : res.status(404).end()
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
   const personObject = persons.find(person => person.id === id)
 
   if (personObject) {
@@ -82,7 +65,7 @@ app.post('/api/persons', (req, res) => {
   const personObject = {
     name: body.name,
     number: body.number,
-    id: Math.ceil(Math.random() * 314159265358)
+    id: String(Math.ceil(Math.random() * 314159265358))
   }
 
   persons = persons.concat(personObject)
