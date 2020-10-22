@@ -12,9 +12,14 @@ app.use(express.static('build'))
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms - :body'))
 
-app.get('/info', (req, res) => res.send(
-  `<p>Phonebook has info of ??? people</p>
-    <p>${new Date(Date.now()).toLocaleString()}</p>`))
+app.get('/info', (req, res) => {
+  Person.count({})
+    .then(count => {
+      res.send(
+        `<p>Phonebook has info of ${count} people</p>
+    <p>${new Date(Date.now()).toLocaleString()}</p>`)
+    })
+})
 
 app.get('/api/persons', (req, res, next) => Person
   .find({})
