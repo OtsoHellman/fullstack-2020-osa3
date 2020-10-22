@@ -26,15 +26,9 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id
-  const personObject = persons.find(person => person.id === id)
-
-  if (personObject) {
-    persons = persons.filter(person => person.id !== id)
-    res.status(204).end()
-  } else {
-    res.status(404).end()
-  }
+  Person.findByIdAndDelete(req.params.id)
+    .then(DBres => res.status(204).end())
+    .catch(error => res.status(400).end())
 })
 
 app.post('/api/persons', (req, res) => {
