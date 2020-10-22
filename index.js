@@ -12,21 +12,11 @@ app.use(express.static('build'))
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms - :body'))
 
-let persons = []
+app.get('/info', (req, res) => res.send(
+  `<p>Phonebook has info of ??? people</p>
+    <p>${new Date(Date.now()).toLocaleString()}</p>`))
 
-Person.find({}).then(res => persons = res)
-
-
-app.get('/info', (req, res) => {
-  res.send(
-    `<p>Phonebook has info of ${persons.length} people</p>
-    <p>${new Date(Date.now()).toLocaleString()}</p>`
-  )
-})
-
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
-})
+app.get('/api/persons', (req, res) => Person.find({}).then(persons => res.json(persons)))
 
 app.get('/api/persons/:id', (req, res) => {
   const id = req.params.id
@@ -56,21 +46,18 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  if (persons.find(person => person.name === body.name)) {
-    return res.status(400).json({
-      error: 'name already exists!'
-    })
-  }
+  // if (persons.find(person => person.name === body.name)) {
+  //   return res.status(400).json({
+  //     error: 'name already exists!'
+  //   })
+  // }
 
-  const personObject = {
+  const personObject = new Person({
     name: body.name,
     number: body.number,
-    id: String(Math.ceil(Math.random() * 314159265358))
-  }
+  })
 
-  persons = persons.concat(personObject)
-
-  res.json(personObject)
+  personObject.save().then(DBres => res.json(DBres))
 })
 
 const PORT = process.env.PORT || 3001
