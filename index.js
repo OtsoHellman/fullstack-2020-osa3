@@ -55,6 +55,13 @@ app.post('/api/persons', (req, res, next) => {
     .catch(err => next(err))
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+  console.log(req)
+  Person.findByIdAndUpdate(req.params.id, req.body)
+    .then(personObject => personObject ? res.json(req.body) : res.status(404).end())
+    .catch(err => next(err))
+})
+
 
 app.use((err, req, res, next) => {
   console.error(err.message)
