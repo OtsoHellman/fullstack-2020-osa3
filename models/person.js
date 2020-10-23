@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
 import DBURI from '../config.js'
 
 console.log('connecting to db...')
@@ -13,9 +14,11 @@ mongoose.connect(DBURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: { type: String, required: true, unique: true },
+    number: { type: String, required: true },
 })
+
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
