@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('body', (req, res) => JSON.stringify(req.body))
+morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms - :body'))
 
 app.get('/info', (req, res) => {
@@ -68,7 +68,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.message)
 
   if (err.name === 'CastError') {
